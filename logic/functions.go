@@ -12,19 +12,26 @@ func AddNewCountry(ConName string, Location string, Wiki string) (string, error)
 		Wiki:     Wiki,
 	}
 	return database.AddNewCountry(newCon)
-
 }
 
-func UpdateCountry(Name string,ConName string, Location string, Wiki string) (string, error) {
+func UpdateCountryName(Name string, newName string) (string, error) {
 	newCon := &model.Country{
-		Name:     ConName,
-		Location: Location,
-		Wiki:     Wiki,
+		Name: newName,
 	}
-	return database.UpdateCountry(Name ,newCon)
-
+	return database.UpdateCountryName(Name, newCon)
 }
-
+func UpdateCountryLocation(Name string, newLocation string) (string, error) {
+	newCon := &model.Country{
+		Location: newLocation,
+	}
+	return database.UpdateCountryLocation(Name, newCon)
+}
+func UpdateCountryWiki(Name string, newWiki string) (string, error) {
+	newCon := &model.Country{
+		Wiki: newWiki,
+	}
+	return database.UpdateCountryWiki(Name, newCon)
+}
 
 func GetAllCountries() ([]model.Country, error) {
 	return database.GetAllCountries()
