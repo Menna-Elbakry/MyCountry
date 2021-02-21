@@ -1,13 +1,14 @@
 package routes
 
 import (
-	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
 	"task/logic"
+
+	"github.com/labstack/echo/v4"
 )
 
-//Countries find all Countries
+//Countries to display all Countries
 func Countries(c echo.Context) error {
 
 	res, err := logic.GetAllCountries()
@@ -18,7 +19,7 @@ func Countries(c echo.Context) error {
 	return c.JSON(http.StatusCreated, res)
 }
 
-//DeleteCountry ticket by it's name
+//DeleteCountry to remove country by it's name
 func DeleteCountry(c echo.Context) error {
 
 	name := c.Param("countryName")
@@ -36,7 +37,10 @@ func AddCountry(c echo.Context) error {
 	name := c.QueryParam("name")
 	location := c.QueryParam("location")
 	wiki := c.QueryParam("wiki")
-
+	if name == "" || location == "" || wiki == "" {
+		log.Print("Please Enter Data Correctly")
+		return nil
+	}
 	res, err := logic.AddNewCountry(name, location, wiki)
 
 	if err != nil {
@@ -44,53 +48,48 @@ func AddCountry(c echo.Context) error {
 	}
 	return c.JSON(http.StatusCreated, res)
 }
-type Info struct {
-	Name string
-	Location string
-	Wiki string
-}
-//UpdateCountry add new Country
-func UpdateCountry(c echo.Context) error {
+
+//UpdateCountryName to modify name
+func UpdateCountryName(c echo.Context) error {
 
 	name := c.Param("countryName")
 
 	nameNew := c.QueryParam("name")
-	location := c.QueryParam("location")
-	wiki := c.QueryParam("wiki")
-
-	info,_:=logic.GetCountryByName(name)
-	if(nameNew==" ") {
-		for _, con := range info {
-			res, err := logic.UpdateCountry(name, con.Name, location, wiki)
-			if err != nil {
-				log.Println("Unsupported method")
-			}
-			return c.JSON(http.StatusCreated, res)
-		}
-	}else if(location==" "){
-		for _, con := range info {
-			res, err := logic.UpdateCountry(name, nameNew, con.Location, wiki)
-			if err != nil {
-				log.Println("Unsupported method")
-			}
-			return c.JSON(http.StatusCreated, res)
-		}
-
-	}else if(wiki==" "){
-		for _, con := range info {
-			res, err := logic.UpdateCountry(name, nameNew, location, con.Wiki)
-			if err != nil {
-				log.Println("Unsupported method")
-			}
-			return c.JSON(http.StatusCreated, res)
-		}
-
-	}else{
-	res, err := logic.UpdateCountry(name, nameNew, location, wiki)
-		if err != nil {
-			log.Println("Unsupported method")
-		}
-		return c.JSON(http.StatusCreated, res)
+	if nameNew == "" {
+		log.Print("Please Enter Name")
+		return nil
 	}
-	return nil
+	res, err := logic.UpdateCountryName(name, nameNew)
+	if err != nil {
+		log.Println("Unsupported method")
+	}
+	return c.JSON(http.StatusCreated, res)
+
+}
+
+//UpdateCountryLocation to modify location
+func UpdateCountryLocation(c echo.Context) error {
+
+	name := c.Param("countryName")
+
+	location := c.QueryParam("location")
+
+	res, err := logic.UpdateCountryLocation(name, location)
+	if err != nil {
+		log.Println("Unsupported method")
+	}
+	return c.JSON(http.StatusCreated, res)
+}
+
+//UpdateCountryWiki to modify wiki
+func UpdateCountryWiki(c echo.Context) error {
+	name := c.Param("countryName")
+
+	wiki := c.QueryParam("wiki")
+	res, err := logic.UpdateCountryWiki(name, wiki)
+	if err != nil {
+		log.Println("Unsupported method")
+	}
+	return c.JSON(http.StatusCreated, res)
+
 }

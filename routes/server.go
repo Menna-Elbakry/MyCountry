@@ -15,7 +15,9 @@ func Server() {
 
 	e.DELETE("/deleteCountry/:countryName", DeleteCountry)
 
-	e.PUT("/updateCountry/:countryName", UpdateCountry)
+	e.PUT("/updateCountryName/:countryName", UpdateCountryName)
+	e.PUT("/updateCountryLocation/:countryName", UpdateCountryLocation)
+	e.PUT("/updateCountryWiki/:countryName", UpdateCountryWiki)
 
 	e.Logger.Fatal(e.Start(":8081"))
 
